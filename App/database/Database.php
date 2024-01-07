@@ -1,6 +1,7 @@
 <?php
 
 namespace App\database;
+
 use PDO;
 use PDOException;
 
@@ -11,7 +12,6 @@ $dotenv->load();
 
 class Database
 {
-
     private static $instance;
     private $serverName;
     private $userName;
@@ -20,23 +20,21 @@ class Database
     private $conn;
     private $error;
 
-    public function __construct()
+    private function __construct()
     {
         $this->serverName = $_ENV["DB_SERVERNAME"];
         $this->userName = $_ENV["DB_USERNAME"];
         $this->password = $_ENV["DB_PASSWORD"];
         $this->dbname = $_ENV["DB_NAME"];
-        $this->DbConnect();
     }
 
-    public function DbConnect()
+    private function DbConnect()
     {
         try {
             $this->conn = new PDO("mysql:host=$this->serverName;dbname=$this->dbname", $this->userName, $this->password);
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
-            $this->error = "Database connection failed: " . $e->getMessage();
-            return false;
+            throw new PDOException("Database connection failed: " . $e->getMessage());
         }
     }
 
@@ -44,6 +42,7 @@ class Database
     {
         if (self::$instance === null) {
             self::$instance = new self();
+            self::$instance->DbConnect(); 
         }
         return self::$instance;
     }
@@ -52,5 +51,4 @@ class Database
     {
         return $this->conn;
     }
-
 }
