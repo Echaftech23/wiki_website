@@ -99,8 +99,8 @@ class UserModel implements UserDAOInterface
                 $userData = $stmt->fetch(PDO::FETCH_OBJ);
 
                 $user = new User(
-                    $userData->username, $userData->email, $userData->password,
-                    $userData->image, $userData->role_id
+                    $userData->id, $userData->username, $userData->email,
+                    $userData->password, $userData->image, $userData->role_id
                 );
 
                 return $user;
@@ -124,8 +124,8 @@ class UserModel implements UserDAOInterface
                 $userData = $stmt->fetch(PDO::FETCH_OBJ);
 
                 $user = new User(
-                    $userData->username, $userData->email,$userData->password,
-                    $userData->image, $userData->role_id
+                    $userData->id, $userData->username, $userData->email,
+                    $userData->password, $userData->image, $userData->role_id
                 );
 
                 return $user;

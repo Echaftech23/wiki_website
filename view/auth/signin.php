@@ -1,5 +1,4 @@
-<?php
-?>
+<?php session_start(); ?>
 <!doctype html>
 <html>
 
@@ -14,10 +13,10 @@
     <!-- Component Start -->
     <div class="bg-white rounded shadow-lg p-12">
         <h1 class="font-semibold text-xl">Welcome Back</h1>
-        
+
 
         <!-- Form -->
-        <form class="flex flex-col mt-4" method="post" action="">
+        <form class="flex flex-col mt-4" method="post" action=" ../../App/controllers/UserController.php">
             <div>
                 <label class="font-semibold text-xs" for="emailField">Email</label>
                 <input id="emailField" name="email" placeholder="Enter your Email" class="flex items-center h-10 px-4 w-64 text-sm bg-gray-200 mt-2 rounded focus:outline-none focus:ring-2" type="text">
