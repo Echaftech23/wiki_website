@@ -6,7 +6,7 @@ use App\entities\User;
 use App\Dao\UserDaoInterface;
 use App\database\Database, PDO, PDOException;
 
-include __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 
 
 class UserModel implements UserDAOInterface

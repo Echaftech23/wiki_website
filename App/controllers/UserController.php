@@ -6,26 +6,31 @@ use App\entities\User;
 use App\models\UserModel;
 
 require __DIR__ . '/../../vendor/autoload.php';
+require __DIR__ . '/test-input.php';
 
 session_start();
 
 class UserController
 {
 
-    public function test_input($data)
+    public function signup()
     {
-        $data = trim($data);
-        $data = stripslashes($data);
-        $data = htmlspecialchars($data);
-        return $data;
+        include '../../view/auth/signup.php';
+        exit();
+    }
+
+    public function signin()
+    {
+        include '../../view/auth/signin.php';
+        exit();
     }
 
     public function register()
     {
-        $username = $this->test_input($_POST['username']);
-        $email = $this->test_input($_POST['email']);
-        $password = $this->test_input($_POST['password']);
-        $cpassword = $this->test_input($_POST['cpassword']);
+        $username = test_input($_POST['username']);
+        $email = test_input($_POST['email']);
+        $password = test_input($_POST['password']);
+        $cpassword = test_input($_POST['cpassword']);
 
         $_SESSION['username'] = $_SESSION['email'] = $_SESSION['password'] = $_SESSION['cpassword'] = "";
 
@@ -61,20 +66,21 @@ class UserController
         if (empty($_SESSION['username']) && empty($_SESSION['email']) && empty($_SESSION['password']) && empty($_SESSION['cpassword'])) {
             $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
-            $user = new User(null, $username, $email, $hashedPassword, null, 1);
+            $user = new User(null, $username, $email, $hashedPassword, null, 2);
             $userModel->save($user);
-            header("location:../../view/auth/signin.php");
+
+            header("location:signin");
             exit();
         } else {
-            header("location:../../view/auth/signup.php");
+            header("location:signup");
             exit();
         }
     }
 
     public function login()
     {
-        $email = $this->test_input($_POST['email']);
-        $password = $this->test_input($_POST['password']);
+        $email = test_input($_POST['email']);
+        $password = test_input($_POST['password']);
 
         $_SESSION['email'] = $_SESSION['password'] = "";
 
@@ -90,33 +96,42 @@ class UserController
 
             $userModel = new UserModel();
             $user = $userModel->getByEmail($email);
-            
+
+            $_SESSION['Auth'] = false;
+
             if ($user) {
                 if (password_verify($password, $user->getPassword())) {
-                    header("location:../../view/index.php");
+
+                    $_SESSION['Auth'] = true;
+                    $_SESSION['Auth_username'] = $user->getUsername();
+                    $_SESSION['user_id'] = $user->getId();
+
+                    if ($user->getRoleId() === 1) {
+                        header('Location:dashboard');
+                        exit();
+                    } else if ($user->getRoleId() === 2) {
+                        header('Location:home');
+                        exit();
+                    }
+                    
                 } else {
                     $_SESSION['password'] = "Incorrect Password";
-                    header("location:../../view/auth/signin.php");
+                    header("location:signin");
                 }
             } else {
                 $_SESSION['email'] = "Email doesn't exist";
-                header("location:../../view/auth/signin.php");
+                header("location:signin");
             }
         } else {
-            header("location:../../view/auth/signin.php");
+            header("location:signin");
             exit();
         }
     }
-}
 
-if (isset($_POST['register'])) {
-    extract($_POST);
-    $registerController = new UserController();
-    $registerController->register();
-}
-
-if (isset($_POST['login'])) {
-    extract($_POST);
-    $registerController = new UserController();
-    $registerController->login();
+    public function logout()
+    {
+        session_destroy();
+        header('location:signin');
+        exit();
+    }
 }

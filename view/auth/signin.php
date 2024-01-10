@@ -1,11 +1,10 @@
-<?php session_start(); ?>
 <!doctype html>
 <html>
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="../../public/css/tailwind.css" rel="stylesheet">
+    <link href="public/css/tailwind.css" rel="stylesheet">
 </head>
 
 <body class="flex flex-col items-center justify-center w-screen h-screen bg-gray-200 text-gray-700">
@@ -16,7 +15,7 @@
 
 
         <!-- Form -->
-        <form class="flex flex-col mt-4" method="post" action=" ../../App/controllers/UserController.php">
+        <form class="flex flex-col mt-4" method="post" action="login">
             <div>
                 <label class="font-semibold text-xs" for="emailField">Email</label>
                 <input id="emailField" name="email" placeholder="Enter your Email" class="flex items-center h-10 px-4 w-64 text-sm bg-gray-200 mt-2 rounded focus:outline-none focus:ring-2" type="text">
@@ -33,7 +32,7 @@
             <div class="flex mt-4 justify-center text-xs">
                 <a class="text-blue-400 hover:text-blue-500" href="#">Don't have account</a>
                 <span class="mx-2 text-gray-300">/</span>
-                <a class="text-blue-400 hover:text-blue-500" href="signup.php">Sign Up</a>
+                <a class="text-blue-400 hover:text-blue-500" href="signup">Sign Up</a>
             </div>
         </form>
     </div>
