@@ -72,11 +72,11 @@ class TagModel implements TagDaoInterface
 
     public function update(Tag $tag)
     {
-        $stmt = $this->pdo->prepare("UPDATE tags SET name = :name,  WHERE id = :id");
+        $stmt = $this->pdo->prepare("UPDATE tags SET name = :name  WHERE id = :id");
 
         // Bind parameters
         $data = array(
-            ":name" => $tag->getName(), ":id" => $tag->getId()
+            ":id" => $tag->getId(), ":name" => $tag->getName()
         );
 
         try {

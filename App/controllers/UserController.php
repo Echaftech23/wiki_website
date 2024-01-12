@@ -104,10 +104,11 @@ class UserController
 
                     $_SESSION['Auth'] = true;
                     $_SESSION['Auth_username'] = $user->getUsername();
-                    $_SESSION['user_id'] = $user->getId();
+                    $_SESSION['Auther_id'] = $user->getId();
+                    $_SESSION['user_image'] = $user->getImage();
 
                     if ($user->getRoleId() === 1) {
-                        header('Location:dashboard');
+                        header('Location:admin');
                         exit();
                     } else if ($user->getRoleId() === 2) {
                         header('Location:home');

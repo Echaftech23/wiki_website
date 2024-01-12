@@ -24,4 +24,17 @@ class CategoryController
             exit();
         }
     }
+
+    public static function updateCategory()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['editcategory'])) {
+            $name = test_input($_POST['name']);
+
+            $tag = new Category(null, $name);
+            $tagModel = new CategoryModel();
+            $tagModel->update($tag);
+            header("Location: categories");
+            exit();
+        }
+    }
 }

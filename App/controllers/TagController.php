@@ -23,4 +23,30 @@ class TagController
         exit();
         }
     }
+
+    public static function updateTag()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edittag'])) {
+            $id = test_input($_POST['id']);
+            $name = test_input($_POST['name']);
+
+            $tag = new Tag($id, $name);
+            $tagModel = new TagModel();
+            $tagModel->update($tag);
+            header("Location: categories");
+            exit();
+        }
+    }
+
+    public static function deleteTag()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            $id = test_input($_GET['id']);
+
+            $tagModel = new TagModel();
+            $tagModel->deleteById($id);
+            header("Location: categories");
+            exit();
+        }
+    }
 }

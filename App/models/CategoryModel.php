@@ -73,11 +73,11 @@ class CategoryModel implements CategoryDaoInterface
 
     public function update(Category $category)
     {
-        $stmt = $this->pdo->prepare("UPDATE categories SET name = :name,  WHERE id = :id");
+        $stmt = $this->pdo->prepare("UPDATE categories SET name = :name  WHERE id = :id");
 
         // Bind parameters
         $data = array(
-            ":name" => $category->getName(), ":id" => $category->getId()
+            ":id" => $category->getId(), ":name" => $category->getName()
         );
 
         try {

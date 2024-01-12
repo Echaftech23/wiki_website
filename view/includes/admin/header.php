@@ -134,8 +134,8 @@
         </li>
         <li class="dropdown ml-3">
             <button type="button" class="dropdown-toggle flex items-center">
-                <img src="public/img/admin.jpg" alt="" class="w-8 h-8 rounded-2xl object-cover mr-2">
-                <span class="text-sm font-semibold inline-flex">Echafai</span>
+                <img src="public/img/<?= $_SESSION['user_image'] ?>" alt="" class="w-8 h-8 rounded-2xl object-cover mr-2">
+                <span class="text-sm font-semibold inline-flex"><?php echo $_SESSION['Auth_username'] ?></span>
 
             </button>
             <ul class="dropdown-menu shadow-md shadow-black/5 z-30 hidden py-1.5 rounded-md bg-white border border-gray-100 w-full max-w-[140px]">

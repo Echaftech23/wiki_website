@@ -9,6 +9,9 @@
     <link rel="stylesheet" href="public/css/fontawesome-all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="public/css/tailwind.css" rel="stylesheet">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
     <script src="public/js/script.js"></script>
@@ -62,8 +65,8 @@
                 <?php if (isset($_SESSION['Auth']) && $_SESSION['Auth']) : ?>
                     <div x-data="{ isOpen: false }">
                         <button @click="isOpen = !isOpen" type="button" class="inline-flex w-full items-center justify-center gap-x-1.5 pe-3 py-2 text-sm font-semibold text-gray-900" id="menu-button" aria-expanded="true" aria-haspopup="true">
-                            <img src="public/img/admin-1.jpg" alt="" class="w-8 h-8 rounded-2xl object-cover mr-2">
-                            <span class="text-sm font-semibold inline-flex">Echafai</span>
+                            <img src="public/img/<?= $_SESSION['user_image'] ?>" alt="" class="w-8 h-8 rounded-2xl object-cover mr-2">
+                            <span class="text-sm font-semibold inline-flex"><?php echo $_SESSION['Auth_username'] ?></span>
                             <svg x-bind:class="{ 'transform rotate-180': isOpen }" class="-mr-1 h-5 w-5 text-gray-400 transition-transform" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                 <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
                             </svg>

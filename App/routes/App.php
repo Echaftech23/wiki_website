@@ -19,9 +19,9 @@ $router->setRoutes([
         'categories' => ['AdminController', 'categories'],
         'edit' => ['AdminController', 'getWikisById'],
         'category' => ['AdminController', 'allCategories'],
-        'addwiki' => ['HomeController', 'allCategories'],
-        'addwikitest' => ['HomeController', 'addwikitest'],
-        'wiki_details' => ['HomeController', 'getWikisById'],
+        'addwiki' => ['HomeController', 'addWiki'],
+        'wiki-detail' => ['HomeController', 'wikiDetail'],
+        'deleteTag' => ['TagController', 'deleteTag'],
 
     ],
     'POST' => [
@@ -30,8 +30,9 @@ $router->setRoutes([
         'logout' => ['UserController', 'logout'],
         'addCategory' => ['CategoryController', 'addCategory'],
         'addTag' => ['TagController', 'addTag'],
-        'addwiki' => ['HomeController', 'addwk'],
-        'editwiki' => ['AdminController', 'updateStatus'],
+        'updateTag' => ['TagController', 'updateTag'],
+        'addWiki' => ['HomeController', 'addWiki'],
+        'updateWiki' => ['AdminController', 'updateStatus'],
 
 
     ],

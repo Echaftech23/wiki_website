@@ -22,7 +22,14 @@ class WikiModel implements WikiDaoInterface
 
     public function getAll()
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM wikis");
+        $stmt = $this->pdo->prepare("
+            SELECT w.*, c.name AS category_name, GROUP_CONCAT(t.name) AS tag_names
+            FROM wikis w
+            JOIN categories c ON w.category_id = c.id
+            LEFT JOIN wikis_tags wt ON w.id = wt.wiki_id
+            LEFT JOIN tags t ON wt.tag_id = t.id
+            GROUP BY w.id
+        ");
         $stmt->execute();
         $wikisData = $stmt->fetchAll(PDO::FETCH_OBJ);
 
@@ -31,8 +38,8 @@ class WikiModel implements WikiDaoInterface
         foreach ($wikisData as $wikiData) {
             $wiki = new Wiki(
                 $wikiData->id, $wikiData->title, $wikiData->content,
-                $wikiData->status, $wikiData->image, $wikiData->created_at,
-                $wikiData->auther_id, $wikiData->category_id
+                $wikiData->status, $wikiData->image, $wikiData->category_name, $wikiData->tag_names, 
+                $wikiData->created_at, $wikiData->auther_id, $wikiData->category_id
             );
 
             $wikis[] = $wiki;
@@ -41,48 +48,77 @@ class WikiModel implements WikiDaoInterface
         return $wikis;
     }
 
-    public function save(Wiki $wiki)
+
+    public function save(Wiki $wiki, $tagsIds)
     {
-        $stmt = $this->pdo->prepare("
-            INSERT INTO wikis (title, content, status, image, created_at, auther_id, category_id)
-            VALUES (:title, :content, :status, :image, :created_at, :auther_id, :category_id)
-        ");
 
-        // Bind parameters
-        $data = array(
-            ":title" => $wiki->getTitle(), ":content" => $wiki->getContent(), ":status" => $wiki->getStatus(),
-            ":image" => $wiki->getImage(), ":created_at" => $wiki->getCreatedAt(),
-            ":auther_id" => $wiki->getAutherId(), ":category_id" => $wiki->getCategoryId()
-        );
-
+        $this->pdo->beginTransaction();
+        
         try {
+
+            $stmt = $this->pdo->prepare("
+                INSERT INTO wikis (title, content, status, image, created_at, auther_id, category_id)
+                VALUES (:title, :content, :status, :image, :created_at, :auther_id, :category_id)
+            ");
+
+            // Bind parameters
+            $data = array(
+                ":title" => $wiki->getTitle(), ":content" => $wiki->getContent(), ":status" => $wiki->getStatus(),
+                ":image" => $wiki->getImage(), ":created_at" => $wiki->getCreatedAt(),
+                ":auther_id" => $wiki->getAutherId(), ":category_id" => $wiki->getCategoryId()
+            );
+
+            
             $stmt->execute($data);
-            $result = $stmt->rowCount() > 0 ? $this->pdo->lastInsertId() : false;
-            return $result;
+            $wikiId = $this->pdo->lastInsertId();
+
+            $stmtWikisTags = $this->pdo->prepare("INSERT INTO Wikis_Tags (wiki_id, tag_id) VALUES (:wiki_id, :tag_id)");
+            
+            foreach ($tagsIds as $tagId) {
+                $dataWikisTags = array(":wiki_id" => $wikiId, ":tag_id" => $tagId);
+                $stmtWikisTags->execute($dataWikisTags);
+            }
+
+            $this->pdo->commit();
+
         } catch (PDOException $e) {
+            $this->pdo->rollBack();
             return $result = false;
         }
     }
 
-    public function update(Wiki $wiki)
+    public function update(Wiki $wiki, $tagIds)
     {
-        $stmt = $this->pdo->prepare("
-            INSERT INTO wikis (title, content, status, image, created_at, auther_id, category_id)
-            VALUES (:title, :content, :status, :image, :created_at, :auther_id, :category_id)
-        ");
-
-        // Bind parameters
-        $data = array(
-            ":title" => $wiki->getTitle(), ":content" => $wiki->getContent(), ":status" => $wiki->getStatus(),
-            ":image" => $wiki->getImage(), ":created_at" => $wiki->getCreatedAt(),
-            ":auther_id" => $wiki->getAutherId(), ":category_id" => $wiki->getCategoryId()
-        );
+        $this->pdo->beginTransaction();
 
         try {
+
+            $stmt = $this->pdo->prepare("
+                INSERT INTO wikis (title, content, status, image, created_at, auther_id, category_id)
+                VALUES (:title, :content, :status, :image, :created_at, :auther_id, :category_id)
+            ");
+
+            // Bind parameters
+            $data = array(
+                ":title" => $wiki->getTitle(), ":content" => $wiki->getContent(), ":status" => $wiki->getStatus(),
+                ":image" => $wiki->getImage(), ":created_at" => $wiki->getCreatedAt(),
+                ":auther_id" => $wiki->getAutherId(), ":category_id" => $wiki->getCategoryId()
+            );
+
+
             $stmt->execute($data);
-            $result = $stmt->rowCount() > 0 ? $wiki : false;
-            return $result;
+            $wikiId = $this->pdo->lastInsertId();
+
+            $stmtWikisTags = $this->pdo->prepare("INSERT INTO Wikis_Tags (wiki_id, tag_id) VALUES (:wiki_id, :tag_id)");
+
+            foreach ($tagIds as $tagId) {
+                $dataWikisTags = array(":wiki_id" => $wikiId, ":tag_id" => $tagId);
+                $stmtWikisTags->execute($dataWikisTags);
+            }
+
+            $this->pdo->commit();
         } catch (PDOException $e) {
+            $this->pdo->rollBack();
             return $result = false;
         }
     }
@@ -98,11 +134,11 @@ class WikiModel implements WikiDaoInterface
             if ($stmt->rowCount() > 0) {
                 $wikiData = $stmt->fetch(PDO::FETCH_OBJ);
 
-                $wiki = new Wiki(
-                    $wikiData->id, $wikiData->title, $wikiData->content,
-                    $wikiData->status, $wikiData->image, $wikiData->created_at,
-                    $wikiData->auther_id, $wikiData->category_id
-                );
+            $wiki = new Wiki(
+                $wikiData->id, $wikiData->title, $wikiData->content,
+                $wikiData->status, $wikiData->image, $wikiData->category_name, $wikiData->tag_names, 
+                $wikiData->created_at, $wikiData->auther_id, $wikiData->category_id
+            );
 
                 return $wiki;
             } else {
