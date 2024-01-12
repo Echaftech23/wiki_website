@@ -1,6 +1,8 @@
   <!-- Header -->
-  <?php include("includes/header.php") ?>
-
+  <?php include("includes/header.php");
+  // echo "
+  // <pre>"; var_dump($wikis->$auther_image);"</pre>"; 
+  ?>
   <!-- main -->
   <main class="pt-12 bg-gray-100 pb-12">
     <div class="container mx-auto px-4 flex flex-wrap lg:flex-nowrap">
@@ -18,7 +20,7 @@
               <!-- Create input -->
               <div class="create-input pl-5  p-4 flex items-center">
                 <img src="public/img/<?= $_SESSION['user_image'] ?>" alt="" class="w-12 h-12 rounded-full mr-3">
-                <a href="addatricle" class="text-xs font-semibold ">Post an Article</a>
+                <a href="addwiki" class="text-xs font-semibold ">Post an Article</a>
               </div>
               <!-- Create post links -->
               <div class="flex text-sm text-gray-600">
@@ -41,46 +43,45 @@
         <?php else : ?>
           <!-- title -->
           <div class="flex bg-white px-3 py-2 justify-between items-center rounded-sm mb-5">
-            <h5 class="text-base uppercase font-semibold font-roboto">BUSINESS</h5>
+            <h5 class="text-base uppercase font-semibold font-roboto"><?php echo $wiki->getCategoryName(); ?></h5>
             <a href="#" class="text-white py-1 px-3 rounded-sm uppercase text-sm bg-blue-500 border border-blue-500 hover:text-blue-500 hover:bg-transparent transition">
               see more
             </a>
           </div>
         <?php endif; ?>
         <!-- big post -->
-        <div class="rounded-sm overflow-hidden bg-white shadow-sm">
-          <a href="wiki-detail" class="block rounded-md overflow-hidden">
-            <img src="public/img/img-12.jpg" class="w-full h-96 object-cover transform hover:scale-110 transition duration-500" alt="">
-          </a>
-          <div class="p-4 pb-5">
-            <a href="wiki-detail">
-              <h2 class="block text-xl font-semibold text-gray-700 hover:text-blue-500 transition font-roboto">
-                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iddo loremque, totam
-                architecto odit pariatur Lorem ips dolor.
-              </h2>
+        <?php foreach ($wikis as $wiki) : ?>
+          <div class="rounded-sm overflow-hidden bg-white shadow-sm">
+            <a href="wiki-detail" class="block rounded-md overflow-hidden">
+              <img src="public/img/<?php echo $wiki->getImage(); ?>" class="w-full h-96 object-cover transform hover:scale-110 transition duration-500" alt="">
             </a>
+            <div class="p-4 pb-5">
+              <a href="wiki-detail">
+                <h2 class="block text-xl font-semibold text-gray-700 hover:text-blue-500 transition font-roboto">
+                  <?= (strlen($wiki->getTitle()) > 150 ? substr($wiki->getTitle(), 0, 150) . '....' : $wiki->getTitle()) ?>
+                </h2>
+              </a>
 
-            <p class="text-gray-500 text-sm mt-2">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Autem distinctio doloremque
-              placeat ipsa! Sequi, recusandae. In numquam similique molestiae error, magni velit suscipit
-              repudiandae itaqu....
-            </p>
-            <div class="mt-3 flex space-x-4">
-              <div class="flex text-gray-400 text-sm items-center">
-                <span class="mr-2 text-xs">
-                  <i class="far fa-user"></i>
-                </span>
-                Blogging Tips
-              </div>
-              <div class="flex text-gray-400 text-sm items-center">
-                <span class="mr-2 text-xs">
-                  <i class="far fa-clock"></i>
-                </span>
-                June 11, 2021
+              <p class="text-gray-500 text-sm mt-2">
+                <?= (strlen($wiki->getContent()) > 200 ? substr($wiki->getContent(), 0, 200) . '....' : $wiki->getContent()) ?>
+              </p>
+              <div class="mt-3 flex space-x-4">
+                <div class="flex text-gray-400 text-sm items-center">
+                  <span class="mr-2 text-xs">
+                    <img src="public/img/<?= $wiki->getAuthorImage(); ?>" alt="" class="w-6 h-6 rounded-2xl object-cover">
+                  </span>
+                  <?php echo $wiki->getAuthorName(); ?>
+                </div>
+                <div class="flex text-gray-400 text-sm items-center">
+                  <span class="mr-2 text-xs">
+                    <i class="far fa-clock"></i>
+                  </span>
+                  <?php echo $wiki->getCreatedAt(); ?>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        <?php endforeach; ?>
 
         <!-- regular post -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
@@ -190,6 +191,27 @@
           </div>
         </div>
 
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" data-aos="fade-left" id="searchResults">
+          <?php foreach ($wikis as $wiki) : ?>
+            <div class="col-span-1 md:col-span-2 lg:col-span-1">
+              <div class="gallery-item" data-aos="zoom-in" data-aos-delay="100">
+                <a href="wiki_details?id=<?= base64_encode($wiki['id']) ?>">
+                  <?php if ($wiki['image']) : ?>
+                    <img src="public/img/<?= $wiki['image'] ?>" alt="" class="w-full h-48 object-cover">
+                  <?php else : ?>
+                    <h1 class="message">Wait till Wikis Team Accept Your Wiki</h1>
+                  <?php endif; ?>
+                </a>
+                <p class="title text-lg font-semibold mt-2">
+                  <?= $wiki['title'] ?>
+                </p>
+                <p class="sub text-gray-600">
+                  <?= $wiki['category_name'] ?>
+                </p>
+              </div>
+            </div>
+          <?php endforeach; ?>
+        </div>
       </div>
 
       <!-- right sidebar -->

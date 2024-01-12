@@ -4,7 +4,7 @@ namespace App\Models;
 
 use App\entities\Wiki;
 use App\Dao\WikiDaoInterface;
-use App\database\Database, PDO, PDOException;
+use App\database\Database, PDO, PDOException, DateTime;
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 
@@ -19,17 +19,31 @@ class WikiModel implements WikiDaoInterface
         $this->pdo = Database::getInstance()->getConnection();
     }
 
-
     public function getAll()
     {
         $stmt = $this->pdo->prepare("
-            SELECT w.*, c.name AS category_name, GROUP_CONCAT(t.name) AS tag_names
-            FROM wikis w
-            JOIN categories c ON w.category_id = c.id
-            LEFT JOIN wikis_tags wt ON w.id = wt.wiki_id
-            LEFT JOIN tags t ON wt.tag_id = t.id
-            GROUP BY w.id
+            SELECT 
+                w.*, c.name AS category_name, GROUP_CONCAT(t.name) AS tag_names,
+                u.username AS author_name, u.image AS author_image
+            FROM
+                wikis w
+            JOIN categories c ON
+                w.category_id = c.id
+            LEFT JOIN wikis_tags wt ON
+                w.id = wt.wiki_id
+            LEFT JOIN tags t ON
+                wt.tag_id = t.id
+            JOIN users u ON
+                w.auther_id = u.id
+            WHERE w.status = 'accepted'
+            GROUP BY
+                w.id
+            ORDER BY
+                w.created_at ASC;
+            
         ");
+
+
         $stmt->execute();
         $wikisData = $stmt->fetchAll(PDO::FETCH_OBJ);
 
@@ -37,14 +51,12 @@ class WikiModel implements WikiDaoInterface
 
         foreach ($wikisData as $wikiData) {
             $wiki = new Wiki(
-                $wikiData->id, $wikiData->title, $wikiData->content,
-                $wikiData->status, $wikiData->image, $wikiData->category_name, $wikiData->tag_names, 
-                $wikiData->created_at, $wikiData->auther_id, $wikiData->category_id
+                $wikiData->id, $wikiData->title, $wikiData->content, $wikiData->status,
+                $wikiData->image, $wikiData->category_name, $wikiData->tag_names,
+                $wikiData->auther_id, $wikiData->category_id, $wikiData->author_name, $wikiData->author_image
             );
-
             $wikis[] = $wiki;
         }
-
         return $wikis;
     }
 
@@ -135,9 +147,9 @@ class WikiModel implements WikiDaoInterface
                 $wikiData = $stmt->fetch(PDO::FETCH_OBJ);
 
             $wiki = new Wiki(
-                $wikiData->id, $wikiData->title, $wikiData->content,
-                $wikiData->status, $wikiData->image, $wikiData->category_name, $wikiData->tag_names, 
-                $wikiData->created_at, $wikiData->auther_id, $wikiData->category_id
+                $wikiData->id, $wikiData->title, $wikiData->content, $wikiData->status,
+                $wikiData->image, $wikiData->category_name, $wikiData->tag_names,
+                $wikiData->auther_id, $wikiData->category_id, $wikiData->author_name, $wikiData->author_image
             );
 
                 return $wiki;
@@ -180,6 +192,34 @@ class WikiModel implements WikiDaoInterface
         } catch (PDOException $e) {
 
             return 0;
+        }
+    }
+
+    public function search($searchInput)
+    {
+        $searchInput = "%$searchInput%";
+        try {
+
+            $stmt = $this->pdo->prepare("
+                SELECT DISTINCT w.*, u.name AS user_name, c.name AS category_name, GROUP_CONCAT(t.label) AS tag_labels
+                FROM wikis w LEFT 
+                JOIN users u ON w.user_id = u.id 
+                JOIN categories c ON w.category_id = c.id
+                JOIN wikis_tags wt ON w.id = wt.wiki_id  JOIN tags t ON wt.tag_id = t.id 
+                WHERE w.title LIKE :searchInput OR w.content LIKE :searchInput 
+                OR u.name LIKE :searchInput OR c.name LIKE :searchInput 
+                OR t.label LIKE :searchInput GROUP BY w.id, u.name, c.name
+            ");
+
+            // Bind parameters
+            $stmt->bindParam(':searchInput', $searchInput, PDO::PARAM_STR);
+            $stmt->execute();
+
+            $wikiData = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $wikiData;
+
+        } catch (PDOException $e) {
+            return $result = false;
         }
     }
 }

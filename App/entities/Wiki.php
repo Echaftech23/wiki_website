@@ -2,6 +2,8 @@
 
 namespace App\entities;
 
+use DateTime;
+
 class Wiki
 {
     private $id;
@@ -10,12 +12,15 @@ class Wiki
     private $status;
     private $image;
     private $category_name;
-    private $tag_names;
+
     private $created_at;
     private $auther_id;
     private $category_id;
+    private $tags = [];
+    private $author_name;
+    private $author_image;
 
-    public function __construct($id = NULL, $title, $content, $status, $image = NULL, $category_name, $tag_names, $created_at, $auther_id, $category_id)
+    public function __construct($id = NULL, $title, $content, $status, $image = NULL, $category_name, $tags, $auther_id, $category_id, $author_name, $author_image)
     {
         $this->id = $id;
         $this->title = $title;
@@ -23,10 +28,11 @@ class Wiki
         $this->status = $status;
         $this->image = $image;
         $this->category_name = $category_name;
-        $this->tag_names = $tag_names;
-        $this->created_at = $created_at;
+        $this->tags = $tags;
         $this->auther_id = $auther_id;
         $this->category_id = $category_id;
+        $this->author_name = $author_name;
+        $this->author_image = $author_image;
     }
 
     public function getId()
@@ -81,12 +87,33 @@ class Wiki
 
     public function getCreatedAt()
     {
-        return $this->created_at;
+        $dateTime = new DateTime($this->created_at);
+        return $dateTime->format("F j, Y");
     }
 
     public function setCreatedAt($created_at)
     {
         $this->created_at = $created_at;
+    }
+
+    public function getAuthorName()
+    {
+        return $this->author_name;
+    }
+
+    public function setAuthorName($author_name)
+    {
+        $this->author_name = $author_name;
+    }
+
+    public function getAuthorImage()
+    {
+        return $this->author_image;
+    }
+
+    public function setAuthorImage($author_image)
+    {
+        $this->author_image = $author_image;
     }
 
     public function getAutherId()
@@ -119,13 +146,13 @@ class Wiki
         $this->$category_name = $category_name;    
     }
 
-    public function getTagNames()
+    public function getTags()
     {
-        return $this->tag_names;
+        return $this->tags;
     }
 
-    public function setTagNames($tag_names)
+    public function setTags($tags)
     {
-        $this->tag_names = $tag_names;
+        $this->tags = $tags;
     }
 }

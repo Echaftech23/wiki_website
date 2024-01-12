@@ -24,6 +24,11 @@ class HomeController
         $tagModel = new TagModel();
         $tags = $tagModel->getLastEightTags();
 
+        $wikiModel = new WikiModel();
+        $wikis = $wikiModel->getAll();
+
+         #echo "<pre>"; var_dump($wikis);"</pre>";
+
         include '../../view/index.php';
         exit();
     }
@@ -42,7 +47,7 @@ class HomeController
                 $uploadDirectory = "public/img/";
                 $filename = basename($_FILES["image"]["name"]);
                 $targetFile = $uploadDirectory . basename($_FILES["image"]["name"]);
-                move_uploaded_file($_FILES["image"]["tmp_name"], $targetFile);
+                $result = move_uploaded_file($_FILES["image"]["tmp_name"], $targetFile);
             }
 
             $title  = test_input($_POST['title']);
@@ -53,19 +58,30 @@ class HomeController
             $tags_ids  = array_map('test_input', $tags_ids);
             $auther_id  = $_SESSION['Auther_id'];
             $category_id  = test_input($_POST['categoryId']);
-
-            $wikiModel = new WikiModel();
-            $wiki = new Wiki(NULL, $title, $content, $status, $image, $category_name = NULL, $tag_names = NULL, $created_at = NULL, $auther_id, $category_id);
-            $result = $wikiModel->save($wiki, $tags_ids);
             
             if ($result) {
-                include '../../view/index.php';
+
+                $wikiModel = new WikiModel();
+                $wiki = new Wiki(NULL, $title, $content, $status, $image, $category_name = NULL, $tags = NULL, $auther_id, $category_id, NULL, NULL);
+                $result = $wikiModel->save($wiki, $tags_ids);
+
+                header('location:home');
                 exit();
             }
         }
         include '../../view/auther/addwiki.php';
     }
 
+    public static function fetchWikis()
+    {
+
+        if (isset($_GET["q"])) {
+
+            $wikiModel = new WikiModel();
+            $wikis = $wikiModel->search($_GET['q']);
+            echo json_encode($wikis);
+        }
+    }
     public function wikiDetail()
     {
         $categoryModel = new CategoryModel();

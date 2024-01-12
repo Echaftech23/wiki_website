@@ -58,7 +58,7 @@
                 <span class="absolute left-3 top-2 text-sm text-gray-500">
                     <i class="fas fa-search"></i>
                 </span>
-                <input type="text" class="block w-full shadow-sm border-none rounded-3xl  pl-11 pr-2 py-2 focus:outline-none bg-gray-50 text-sm text-gray-700 placeholder-gray-500" placeholder="Search">
+                <input type="text" id="searchInput" class="block w-full shadow-sm border-none rounded-3xl  pl-11 pr-2 py-2 focus:outline-none bg-gray-50 text-sm text-gray-700 placeholder-gray-500" placeholder="Search">
             </div>
             <div class="lg:ml-5 ml-auto relative text-left">
 

@@ -22,6 +22,7 @@ $router->setRoutes([
         'addwiki' => ['HomeController', 'addWiki'],
         'wiki-detail' => ['HomeController', 'wikiDetail'],
         'deleteTag' => ['TagController', 'deleteTag'],
+        'search' => ['HomeController', 'fetchWikis']
 
     ],
     'POST' => [

@@ -65,6 +65,44 @@
         selectedCategoryDiv.appendChild(input);
     });
 </script>
+
+<script>
+    const searchInput = document.getElementById("searchInput");
+    const searchResults = document.getElementById("searchResults");
+    const otherdiv = document.getElementById("otherdiv");
+
+    searchInput.addEventListener("input", async function(e) {
+        try {
+            const query = e.target.value;
+            const data = await fetch("search?q=" + encodeURIComponent(query));
+            const results = JSON.parse(data);
+            console.log(query)
+
+            searchResults.innerHTML = "";
+
+            results.forEach((item) => {
+                const card = document.createElement("div");
+                card.className = "col-lg-3 col-md-4";
+                card.innerHTML = `
+                    <div class="gallery-item" data-aos="zoom-in" data-aos-delay="100">
+                    <a href="wiki_details?id=${btoa(item.id)}">
+                        ${
+                        item.image
+                            ? `<img src="public${item.image}" alt="" class="w-full h-48 object-cover">`
+                            : '<h1 class="message">Wait till Wikis Team Accept Your Wiki</h1>'
+                        }
+                    </a>
+                    <p class="title text-lg font-semibold mt-2">${item.title}</p>
+                    <p class="sub text-gray-600">${item.category_name}</p>
+                    </div>
+                `;
+                searchResults.appendChild(card);
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    });
+</script>
 </body>
 
 </html>
