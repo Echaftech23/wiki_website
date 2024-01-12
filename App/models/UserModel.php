@@ -9,7 +9,7 @@ use App\database\Database, PDO, PDOException;
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 
-class UserModel implements UserDAOInterface
+class UserModel
 {
 
     private $pdo;

@@ -1,5 +1,5 @@
 <!-- left sidebar -->
-<div class="w-3/12 hidden xl:block">
+<div class=" w-3/12 hidden xl:block">
     <!-- categories -->
     <div class="w-full bg-white shadow-sm rounded-sm p-4 ">
         <h3 class="text-xl font-semibold text-gray-700 mb-3 font-roboto">Categories</h3>

@@ -3,13 +3,12 @@
 namespace App\Models;
 
 use App\entities\Tag;
-use App\Dao\TagDaoInterface;
 use App\database\Database, PDO, PDOException;
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 
-class TagModel implements TagDaoInterface
+class TagModel
 {
 
     private $pdo;
@@ -54,23 +53,19 @@ class TagModel implements TagDaoInterface
         return $tags;
     }
 
-    public function save(Tag $tag)
+    public function save($tag)
     {
         $tagName =  $tag->getName();
 
         $stmt = $this->pdo->prepare("INSERT INTO tags (name) VALUES (:name)");
         $stmt->bindParam(":name", $tagName);
 
-        try {
-            $stmt->execute();
-            $result = $stmt->rowCount() > 0 ? $this->pdo->lastInsertId() : false;
-            return $result;
-        } catch (PDOException $e) {
-            return $result = false;
-        }
+        $stmt->execute();
+        $result = $stmt->rowCount() > 0 ? $this->pdo->lastInsertId() : false;
+        return $result;
     }
 
-    public function update(Tag $tag)
+    public function update($tag)
     {
         $stmt = $this->pdo->prepare("UPDATE tags SET name = :name  WHERE id = :id");
 

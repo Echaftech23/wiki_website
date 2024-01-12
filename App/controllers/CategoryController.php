@@ -4,6 +4,7 @@ namespace App\controllers;
 
 use App\entities\Category;
 use App\models\CategoryModel;
+use Exception;
 
 require __DIR__ . '/../../vendor/autoload.php';
 require __DIR__ . '/test-input.php';
@@ -19,9 +20,14 @@ class CategoryController
 
             $tag = new Category(null, $name);
             $tagModel = new CategoryModel();
+            try{
             $tagModel->save($tag);
-            header("Location: categories");
-            exit();
+                header("Location: categories");
+                exit();
+            }
+            catch(Exception $e){
+                echo 'Category Duplicated please renter a new one ';
+            }
         }
     }
 

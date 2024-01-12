@@ -3,13 +3,12 @@
 namespace App\Models;
 
 use App\entities\Category;
-use App\Dao\CategoryDaoInterface;
 use App\database\Database, PDO, PDOException;
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 
-class CategoryModel implements CategoryDaoInterface
+class CategoryModel
 {
 
     private $pdo;
@@ -55,23 +54,20 @@ class CategoryModel implements CategoryDaoInterface
         return $categories;
     }
 
-    public function save(Category $category)
+    public function save($category)
     {
         $categoryName =  $category->getName();
 
         $stmt = $this->pdo->prepare("INSERT INTO categories (name) VALUES (:name)");
         $stmt->bindParam(":name", $categoryName);
-
-        try {
-            $stmt->execute();
-            $result = $stmt->rowCount() > 0 ? $this->pdo->lastInsertId() : false;
-            return $result;
-        } catch (PDOException $e) {
-            return $result = false;
-        }
+        
+        $stmt->execute();
+        $result = $stmt->rowCount() > 0 ? $this->pdo->lastInsertId() : false;
+        return $result;
+        
     }
 
-    public function update(Category $category)
+    public function update($category)
     {
         $stmt = $this->pdo->prepare("UPDATE categories SET name = :name  WHERE id = :id");
 

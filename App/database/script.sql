@@ -30,7 +30,7 @@ CREATE TABLE Wikis (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     content TEXT NOT NULL,
-    status ENUM('Pending', 'Accepted', 'Rejected') NOT NULL DEFAULT 'Pending',
+    status ENUM('Pending', 'Accepted', 'Archived') NOT NULL DEFAULT 'Pending',
     image VARCHAR(255) NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     auther_id INT,

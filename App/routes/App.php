@@ -13,15 +13,15 @@ $router->setRoutes([
         'signup' => ['UserController', 'signup'],
         'signin' => ['UserController', 'signin'],
         'logout' => ['UserController', 'logout'],
-        'artcile' => ['AuthController', 'detail'],
         'admin' => ['AdminController', 'dashboard'],
         'wikis' => ['AdminController', 'index'],
         'categories' => ['AdminController', 'categories'],
-        'edit' => ['AdminController', 'getWikisById'],
+        'edit' => ['HomeController', 'getWikisById'],
         'category' => ['AdminController', 'allCategories'],
         'addwiki' => ['HomeController', 'addWiki'],
         'wiki-detail' => ['HomeController', 'wikiDetail'],
         'deleteTag' => ['TagController', 'deleteTag'],
+        'deleteWiki' => ['HomeController', 'deleteWiki'],
         'search' => ['HomeController', 'fetchWikis']
 
     ],
@@ -33,9 +33,8 @@ $router->setRoutes([
         'addTag' => ['TagController', 'addTag'],
         'updateTag' => ['TagController', 'updateTag'],
         'addWiki' => ['HomeController', 'addWiki'],
-        'updateWiki' => ['AdminController', 'updateStatus'],
-
-
+        'updateWiki' => ['HomeController', 'updateWiki'],
+        'updateStatus' => ['AdminController', 'updateStatus']
     ],
 ]);
 

@@ -13,9 +13,8 @@
             <div class="flex bg-white px-3 py-2 justify-between items-center rounded-sm mb-5">
                 <h5 class="text-base uppercase font-semibold font-roboto">BUSINESS</h5>
                 <div class="">
-                    <a href="#" class="text-2xl py-1 px-3">...</a>
-                    <a href="#" class="text-white py-1 px-3 rounded-sm uppercase text-sm bg-blue-500 border border-blue-500 hover:text-blue-500 hover:bg-transparent transition">
-                        see more
+                    <a href="#" class="text-white py-1 px-3 rounded-sm uppercase text-xs font-semibold bg-blue-500 border border-blue-500 hover:text-blue-500 hover:bg-transparent transition">
+                        more option
                     </a>
                 </div>
 
@@ -23,33 +22,29 @@
             <!-- post view -->
             <div class="rounded-sm overflow-hidden bg-white shadow-sm">
                 <div class="">
-                    <img src="public/img/img-12.jpg" class="w-full h-96 object-cover">
+                    <img src="public/img/<?php echo $wiki->getImage() ?>" class="w-full h-96 object-cover">
                 </div>
                 <div class="p-4 pb-5">
                     <h2 class="block text-2xl font-semibold text-gray-700 font-roboto">
-                        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iddo loremque, totam
-                        architecto odit pariatur Lorem ips dolor.
+                        <?= $wiki->getTitle() ?>
                     </h2>
                     <div class="mt-2 flex space-x-4">
                         <div class="flex text-gray-400 text-sm items-center">
                             <span class="mr-2 text-xs">
-                                <i class="far fa-user"></i>
+                                <img src="public/img/<?= $wiki->getAuthorImage() ?>" alt="" class="w-6 h-6 rounded-2xl object-cover">
                             </span>
-                            Blogging Tips
+                            <?php echo $wiki->getAuthorName() ?>
                         </div>
                         <div class="flex text-gray-400 text-sm items-center">
                             <span class="mr-2 text-xs">
                                 <i class="far fa-clock"></i>
                             </span>
-                            June 11, 2021
+                            <?php echo $wiki->getCreatedAt() ?>
                         </div>
                     </div>
 
                     <p class="text-gray-500 text-sm mt-5">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis et sunt saepe accusamus
-                        eum ex sint est neque provident tempore, minus laborum repudiandae vitae temporibus
-                        nesciunt, sed enim quo harum a id, alias maiores! Incidunt iusto minus explicabo itaque iure
-                        recusandae
+                        <?= $wiki->getContent() ?>
                     </p>
 
                     <p class="bg-green-50 border border-green-500 p-3 text-sm  mt-5">
@@ -61,50 +56,11 @@
                         <span class="text-xl ml-1 text-gray-400"><i class="fas fa-quote-right"></i></span>
                     </p>
 
-                    <p class="text-gray-500 text-sm mt-5">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis et sunt saepe accusamus
-                        eum ex sint est neque provident tempore, minus laborum repudiandae vitae temporibus
-                        nesciunt, sed enim quo harum a id, alias maiores! Incidunt iusto minus explicabo itaque iure
-                        recusandae
-                    </p>
-
-                    <ul class="mt-6 pl-5  space-y-2">
-                        <li class="text-sm">
-                            <span class="mr-1"><i class="fas fa-angle-right"></i></span>
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis.
-                        </li>
-                        <li class="text-sm">
-                            <span class="mr-1"><i class="fas fa-angle-right"></i></span>
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis.
-                        </li>
-                        <li class="text-sm">
-                            <span class="mr-1"><i class="fas fa-angle-right"></i></span>
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis.
-                        </li>
-                        <li class="text-sm">
-                            <span class="mr-1"><i class="fas fa-angle-right"></i></span>
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis.
-                        </li>
-                    </ul>
-
-                    <p class="text-gray-500 text-sm mt-5">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis et sunt saepe accusamus
-                        eum ex sint est neque provident tempore, minus laborum repudiandae vitae temporibus
-                        nesciunt, sed enim quo harum a id, alias maiores! Incidunt iusto minus explicabo itaque iure
-                        recusandae
-                    </p>
-
-                    <p class="text-gray-500 text-sm mt-5">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis et sunt saepe accusamus
-                        eum ex sint est neque provident tempore, minus laborum repudiandae vitae temporibus
-                        nesciunt, sed enim quo harum a id, alias maiores! Incidunt iusto minus explicabo itaque iure
-                        recusandae
-                    </p>
-
+                    <?php $tagsTable = $wiki->getTags() ?>
                     <div class="flex items-center flex-wrap gap-2 mt-5">
-                        <a href="#" class="px-3 py-1  text-sm border border-gray-200 rounded-sm transition hover:bg-blue-500 hover:text-white">Beauti</a>
-                        <a href="#" class="px-3 py-1  text-sm border border-gray-200 rounded-sm transition hover:bg-blue-500 hover:text-white">Sports</a>
-                        <a href="#" class="px-3 py-1  text-sm border border-gray-200 rounded-sm transition hover:bg-blue-500 hover:text-white">Business</a>
+                            <?php foreach ($tagsTable as $tag) : ?>
+                                <a href="#" class="px-3 py-1  text-sm border border-gray-200 rounded-sm transition hover:bg-blue-500 hover:text-white"><?php echo $tag ?></a>
+                            <?php endforeach; ?>
                     </div>
 
                     <div class="mt-5 pt-5 border-t border-gray-200 flex gap-2">

@@ -3,8 +3,10 @@
 namespace App\controllers;
 
 require __DIR__ . '/../../vendor/autoload.php';
+require __DIR__ . '/test-input.php';
 
 use App\entities\Tag;
+use App\entities\Wiki;
 use App\entities\Category;
 use App\models\CategoryModel;
 use App\models\TagModel;
@@ -49,12 +51,6 @@ class AdminController
         exit();
     }
 
-    // public function allusers()
-    // {
-    //     $users = UserModel::getAllUsers();
-    //     $this->admin($users);
-    // }
-
     public function allwikis()
     {
 
@@ -73,18 +69,20 @@ class AdminController
         //     echo "Error: 'id' parameter is missing.";
         // }
     }
+
     public function updateStatus()
     {
-        if (isset($_POST["update"])) {
-            // if (isset($_GET['id'])) {
-            //     $wikiId = base64_decode($_GET['id']);
-            //     $status = $_POST['status'];
-            //     var_dump($wikiId, $status);
-            //     WikiModel::updateWiki($wikiId, $status);
-            //     header('Location:wikis');
-            // } else {
-            //     echo "Error: 'id' parameter is missing.";
-            // }
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
+
+            $id = test_input($_POST['id']);
+            $status = test_input($_POST['status']);
+
+            $wiki = new Wiki($id, NULL, NULL, $status, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+            $wikiModel = new WikiModel();
+            $result = $wikiModel->updateStatus($wiki);
+
+            header("Location:wikis");
+            exit();
         }
     }
 }
